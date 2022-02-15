@@ -14,12 +14,14 @@ public class GameManager : MonoBehaviour
     public int score;
     public bool restart;
     public bool runningGame;
+    private int highestScore;
     void Start()
     {
         Instantiate(blockPrefab, new Vector3(0, 4.3f, 0), Quaternion.identity);
         runningGame = true;
         restart = false;
         score = 0;
+        highestScore = 0;
 
 /*        restartButton = GameObject.Find("RestartButton").GetComponent<Button>();
         Vector3 pos = restartButton.transform.position;
@@ -37,7 +39,17 @@ public class GameManager : MonoBehaviour
             _pointsText.text = score.ToString();
         } else
         {
-            _pointsText.text = "Game Over! \n Score: " + score;
+            if(score > highestScore)
+            {
+                highestScore = score;
+                if(highestScore > 0)
+                {
+                    PlayerPrefs.SetInt("topScore", highestScore);
+                    PlayerPrefs.Save();
+                }
+                
+            }
+            _pointsText.text = "Game Over! \n Score: " + score + "\n Highest Score: " + PlayerPrefs.GetInt("topScore");
             if(!restart)
             {
                 Invoke(nameof(RestartGame), 2.0f);
